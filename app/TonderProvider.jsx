@@ -11,7 +11,7 @@ export const useTonder = () => {
 export const TonderProvider = ({ children }) => {
   const [tonderInstance, setTonderInstance] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  
   useEffect(() => {
     const init = async () => {
       try {
@@ -21,11 +21,11 @@ export const TonderProvider = ({ children }) => {
         console.log('baseUrl: ', baseUrl)
 
         const inlineCheckout = new InlineCheckout({
+          mode: 'development',
           apiKey: apiKey,
           returnUrl: baseUrl + 'checkout',
           successUrl: baseUrl + 'success'
         });
-
         setTonderInstance(inlineCheckout);
       } catch (error) {
         console.error("Error initializing Tonder:", error);
