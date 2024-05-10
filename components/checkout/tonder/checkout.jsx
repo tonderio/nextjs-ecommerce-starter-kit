@@ -33,10 +33,18 @@ export default function TonderCheckout() {
   );
 }
 
+function validateAndParseFloat(item, field) {
+  const value = field.split('.').reduce((o, key) => (o || {})[key], item);
+  if (value === null || value === undefined) {
+    return 0;
+  }
+  return parseFloat(value);
+}
+
 function CheckoutContent() {
   const tonder = useTonder();
   const [loading, setLoading] = useState(false)
-  const { cartId } = useCart();
+  const { cartId, clearCart } = useCart();
 	const {items, isLoading, setItems} = useFetchCartItems();
   const {customer, logout, customerIsInited} = useCustomer();
 
@@ -59,20 +67,26 @@ function CheckoutContent() {
         },
         cart: {
           total: parseFloat((items.reduce((total, item) => {
-            return total + item.qty * parseFloat(item.itemPrice.final_price);
+            return total + item.qty * validateAndParseFloat(item, "itemPrice.final_price");
         }, 0)).toFixed(2)),
-          items: items.map((item) => ({
-            description: item.vwItem.product.title,
-            quantity: item.qty,
-            price_unit: parseFloat(item.itemPrice.final_price),
-            discount: parseFloat(item.itemPrice.discount_amount),
-            taxes: 0,
-            product_reference: item.vwItem.product.product_id,
-            name: item.vwItem.product.title,
-            amount_total: item.qty * parseFloat(item.itemPrice.final_price),
-          }))
+          items: items.map((item) => {
+            const final_price = validateAndParseFloat(item, "itemPrice.final_price")
+            return {
+              description: item.vwItem.product.title,
+              quantity: item.qty,
+              price_unit: final_price,
+              discount: validateAndParseFloat(item, "itemPrice.discount_amount"),
+              taxes: 0,
+              product_reference: item.vwItem.product.product_id,
+              name: item.vwItem.product.title,
+              amount_total: item.qty * final_price,
+            }
+          })
         }});
       console.log(response)
+      items.forEach((itm) => {
+        apiClient.cart.removeFromCart(cartId, [itm.item_id]);
+      })
       alert('Pago realizado con éxito');
     } catch (error) {
       console.log("error: ", error)
