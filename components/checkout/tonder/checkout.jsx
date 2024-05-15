@@ -97,7 +97,7 @@ function CheckoutContent() {
   }
   useEffect(() => {
     if (!tonder) return;
-
+    tonder.setCustomerEmail(customer && customer.email ? this.customer.email:defaultCustomer.email)
     tonder.injectCheckout('tonder-checkout');
     return () => {
       if (tonder.removeCheckout) {
