@@ -44,7 +44,7 @@ function validateAndParseFloat(item, field) {
 function CheckoutContent() {
   const tonder = useTonder();
   const [loading, setLoading] = useState(false)
-  const { cartId, clearCart } = useCart();
+  const { cartId, clearCart, setTotal } = useCart();
 	const {items, isLoading, setItems} = useFetchCartItems();
   const {customer, logout, customerIsInited} = useCustomer();
 
@@ -87,6 +87,7 @@ function CheckoutContent() {
       items.forEach((itm) => {
         apiClient.cart.removeFromCart(cartId, [itm.item_id]);
       })
+      setTotal(0)
       alert('Pago realizado con éxito');
     } catch (error) {
       console.log("error: ", error)
