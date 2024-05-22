@@ -51,7 +51,7 @@ function CheckoutContent() {
   const pay = async () => {
     try {
       setLoading(true)
-      
+      localStorage.setItem('itemsToClear', JSON.stringify({cartId, items}));
       const response = await tonder.payment({
         customer:{
           ...(!!customer ? 
@@ -79,15 +79,19 @@ function CheckoutContent() {
               taxes: 0,
               product_reference: item.vwItem.product.product_id,
               name: item.vwItem.product.title,
-              amount_total: item.qty * final_price,
+              amount_total: parseFloat((item.qty * final_price).toFixed(2)),
             }
           })
-        }});
+      }});
       console.log(response)
       items.forEach((itm) => {
         apiClient.cart.removeFromCart(cartId, [itm.item_id]);
       })
-      setTotal(0)
+      setTotal({
+				qty: 0,
+				total: "0"
+			})
+      localStorage.setItem('itemsToClear', JSON.stringify({cartId, items}));
       alert('Pago realizado con éxito');
     } catch (error) {
       console.log("error: ", error)

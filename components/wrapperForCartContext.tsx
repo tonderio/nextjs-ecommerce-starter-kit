@@ -1,7 +1,7 @@
 'use client';
 
-import {ReactNode, useCallback, useMemo, useState} from 'react';
-import {BoundlessCart} from 'boundless-commerce-components/dist/client';
+import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
+import {BoundlessCart, useCart} from 'boundless-commerce-components/dist/client';
 import {apiClient} from '@/lib/api';
 import {IAddToCartResponse} from 'boundless-api-client';
 import ProductAddedDialog from '@/components/wrapperForCartContext/productAddedDialog';
@@ -11,7 +11,7 @@ import {usePathname} from 'next/navigation';
 
 export default function WrapperForCartContext({children}: {children: ReactNode}) {
 	const pathname = usePathname();
-
+	const { setTotal } = useCart();
 	const [addedToCart, setAddedToCart] = useState<IAddToCartResponse>();
 	const [neededSelectVariant, setNeededSelectVariant] = useState<IAddToCartResponse>();
 
@@ -25,6 +25,22 @@ export default function WrapperForCartContext({children}: {children: ReactNode})
 
 		return true;
 	}, [pathname]);
+
+	useEffect(() => {
+		const itemsToClear = JSON.parse(localStorage.getItem('itemsToClear') ?? "{}");
+		if (itemsToClear && itemsToClear.items && itemsToClear.items.length > 0) {
+			itemsToClear.items.forEach((itemId: number) => {
+		    apiClient.cart.removeFromCart(itemsToClear.cartId, [itemId]);
+		  });
+		  if(setTotal){
+			setTotal({
+				qty: 0,
+				total: "0"
+			})
+		  }
+		  localStorage.removeItem('itemsToClear');
+		}
+	  }, [])
 
 	return (
 		<BoundlessCart
