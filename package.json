@@ -46,7 +46,7 @@
     "react-content-loader": "^6.2.1",
     "react-dom": "^18",
     "stripe": "^14.5.0",
-    "tonder-web-sdk": "^1.9.2-beta.5"
+    "tonder-web-sdk": "^1.9.3-beta.1"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.202",
