@@ -15,13 +15,13 @@ export const TonderProvider = ({ children }) => {
   useEffect(() => {
     const init = async () => {
       try {
-        const apiKey = "4c87c36e697e65ddfe288be0afbe7967ea0ab865"
+        const apiKey = "11e3d3c3e95e0eaabbcae61ebad34ee5f93c3d27"
         const baseUrl = "http://localhost:3000/"
         console.log('apiKey: ', apiKey)
         console.log('baseUrl: ', baseUrl)
 
         const inlineCheckout = new InlineCheckout({
-          mode: 'development',
+          mode: 'stage',
           apiKey: apiKey,
           returnUrl: baseUrl + 'checkout',
           successUrl: baseUrl + 'success'
