@@ -83,8 +83,11 @@ function CheckoutContent() {
   }
   useEffect(() => {
     if (!tonder) return;
-
+    tonder.configureCheckout({customer: {email: customer && customer.email ? this.customer.email: defaultCustomer.email}})
     tonder.injectCheckout('tonder-checkout');
+    tonder.verify3dsTransaction().then(response => {
+      console.log('Verify 3ds response', response)
+    })
     return () => {
       if (tonder.removeCheckout) {
         tonder.removeCheckout();
