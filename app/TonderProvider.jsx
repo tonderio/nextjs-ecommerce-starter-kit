@@ -23,7 +23,7 @@ export const TonderProvider = ({ children }) => {
         const inlineCheckout = new InlineCheckout({
           mode: 'stage',
           apiKey: apiKey,
-          returnUrl: baseUrl + 'checkout',
+          returnUrl: baseUrl + 'tonder/checkout',
           successUrl: baseUrl + 'success'
         });
         setTonderInstance(inlineCheckout);
