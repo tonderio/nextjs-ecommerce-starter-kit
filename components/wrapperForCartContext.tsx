@@ -26,22 +26,6 @@ export default function WrapperForCartContext({children}: {children: ReactNode})
 		return true;
 	}, [pathname]);
 
-	useEffect(() => {
-		const itemsToClear = JSON.parse(localStorage.getItem('itemsToClear') ?? "{}");
-		if (itemsToClear && itemsToClear.items && itemsToClear.items.length > 0) {
-			itemsToClear.items.forEach((itemId: number) => {
-		    apiClient.cart.removeFromCart(itemsToClear.cartId, [itemId]);
-		  });
-		  if(setTotal){
-			setTotal({
-				qty: 0,
-				total: "0"
-			})
-		  }
-		  localStorage.removeItem('itemsToClear');
-		}
-	  }, [])
-
 	return (
 		<BoundlessCart
 			apiClient={apiClient}
